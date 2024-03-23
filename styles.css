@@ -1,0 +1,244 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+#character-portraits {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Creates three columns of equal width */
+    gap: 20px; /* Adjust the space between columns */
+}
+
+.role-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.characters {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Creates three columns */
+    gap: 10px; /* Adjusts the space between items */
+    width: 100%;
+}
+
+.character {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.character img {
+    width: 30px; /* Adjust size as needed */
+    height: 30px;
+    margin-right: 10px; /* Space between image and name */
+    border-radius: 50%; /* Circular image */
+}
+
+.character span {
+    font-size: 14px; /* Adjust size as needed */
+}
+
+.character span {
+    font-size: 14px;
+}
+
+#team-compositions {
+    margin-top: 20px;
+}
+
+
+.dropped-character {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100px; /* Fixed width */
+    height: auto;
+    text-align: center;
+}
+
+.dropped-character img {
+    width: 80px; /* Adjust portrait size */
+    height: 80px; /* Maintain aspect ratio */
+    border-radius: 50%; /* Circle portraits */
+    object-fit: cover;
+    border: 3px solid #ddd; /* Light border around portrait */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Soft shadow for depth */
+}
+
+.dropped-character span {
+    font-size: 14px; /* Smaller font size for names */
+    margin-top: 5px; /* Space between portrait and name */
+    color: #333; /* Darker font color */
+    white-space: nowrap; /* Prevent name wrapping */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Ellipsis for long names */
+    max-width: 100%; /* Ensure name doesn't exceed portrait width */
+}
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns of equal width */
+    width: 100%; /* Take up full width of its container */
+    gap: 50px; /* Adds spacing between the columns */
+}
+.team-dropzone {
+    border: 2px dashed #ccc;
+    padding: 10px;
+    min-height: 200px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: start;
+    width: 100%; /* Ensure drop zones take full width of their grid area */
+}
+
+.chart-container {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%; /* Adjusted to take full width of its grid area */
+}
+.dropped-character {
+    position: relative;
+    cursor: pointer;
+}
+
+.remove-character {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    padding: 2px 5px;
+    cursor: pointer;
+    border-radius: 0 0 0 5px; /* Rounded corner */
+}
+
+.dropped-character:hover .remove-character {
+    visibility: visible;
+}
+
+.remove-character:hover {
+    background-color: darkred;
+}
+.chart-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    width: 100%;
+}
+
+.chart-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: #ffffff;
+    border-radius: 8px;
+    margin: 5px; /* Adjust margin for spacing around cards */
+    max-width: 150px; /* Maximum width for chart cards */
+    height: 150px; /* Maximum height for chart cards */
+    overflow: hidden; /* Prevents content from overflowing */
+}
+
+.chart-card canvas {
+    max-width: 100%; /* Ensures canvas does not exceed card size */
+    max-height: 100%; /* Ensures canvas does not exceed card size */
+}
+
+
+.chart-wrapper canvas {
+    width: 100% !important;
+    height: auto !important;
+}
+
+.chart-value {
+    font-size: 14px;
+    color: #333;
+    margin-top: 5px;
+}
+.overlay {
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0, 0.5);
+    border-radius: 8px;
+}
+
+.overlay-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    border-radius: 8px;
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.playstyle-image {
+    width: 80px; /* Adjust the width as needed */
+    height: 80px; /* Adjust the height as needed */
+    margin: 5px;
+    border-radius: 40px; /* Circular images */
+    object-fit: cover;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.playstyle-container {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.playstyle-column {
+    flex-basis: 30%; /* Adjust based on desired width */
+    padding: 10px; /* Adjust based on desired spacing */
+    box-sizing: border-box; /* Ensures padding does not affect the total width of the column */
+}
+.playstyle-images-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); /* Creates a grid with up to 5 columns, each at least 80px wide */
+    gap: 10px; /* Space between images */
+    max-width: 100%; /* Ensures the container does not exceed its parent width */
+    justify-content: center; /* Center the grid items if they don't fill all columns */
+    background-color: #777;
+    border-radius: 20px;
+}
+.character-portrait {
+    width: 100%; /* Make images fill their cell */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 50%; /* Circular portraits */
+    object-fit: cover; /* Cover the grid area without distorting the image */
+}
+.analysis-container {
+    padding: 20px; /* Interior space around the content */
+    margin: 20px 0; /* Space outside the container, adjust as needed */
+    background-color: #f9f9f9; /* Light background for distinction */
+    border-radius: 8px; /* Optional rounded corners */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Optional shadow for depth */
+}

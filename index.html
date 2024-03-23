@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overwatch Team Composer</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+</head>
+<body>
+    <button id="how-to-use-btn">How to use this tool</button>
+
+<div id="how-to-use-overlay" class="overlay" style="display:none;">
+    <div class="overlay-content">
+        <span class="close-btn" onclick="closeHowToUseOverlay()">&times;</span>
+        <h2>How to Use This Tool</h2>
+        <p>
+            Overwatch team compositions work on a rock-paper-scissors basis. Here's how it breaks down:
+            <ul>
+                <li><strong>Brawl</strong> defeats Dive.</li>
+                <li><strong>Dive</strong> defeats Pick.</li>
+                <li><strong>Pick</strong> defeats Brawl.</li>
+            </ul>
+        </p>
+        <p>
+            Maximizing one playstyle and sticking to it is often best, but this tool can help you fill in the gaps when cooperation in ranked play is limited by uncooperative team mates.
+        </p>
+        <p>In an ideal scenario, your team should choose a composition that collectively exceeds <b>500</b> points in your desired playstyle. In a realistic scenario, you should look to increase your team's score against the playstyle that is the domainant playstyle for your opponent.</p>
+        <div class="playstyle-container">
+            <div class="playstyle-column">
+                <h2>Brawl</h2>
+                <p>Brawl compositions are characterized by their close-quarters combat and high sustainability, making them formidable in narrow spaces where they can leverage their combined health pools and area-of-effect (AoE) abilities. This playstyle thrives on creating a frontline that's hard to penetrate, relying on characters that can sustain damage and heal through it, allowing for a gradual but steady advance on objectives. However, its weakness becomes apparent against compositions that excel at long-range engagements or have high mobility, becoming vulnerable to being picked off from afar or outmaneuvered.</p>
+                <div id="brawl-playstyle" class="playstyle-container playstyle-images-container"></div>
+            </div>
+            <div class="playstyle-column">
+                <h2>Dive</h2>
+                <p>Dive compositions capitalize on high mobility and target focus to isolate and eliminate key opponents quickly. This playstyle is about creating chaos and exploiting openings, using characters that can engage and disengage rapidly. Dive is particularly effective against teams that rely on positioning and long-range damage, as it can bypass frontline defenses to pressure vulnerable backlines directly. However, Dive's reliance on coordination and timing; missteps can lead to members being isolated and quickly eliminated. Additionally, Dive teams often have lower overall health pools, making them susceptible to burst damage or AoE abilities that can punish closely grouped attackers.</p>
+                <div id="dive-playstyle" class="playstyle-container playstyle-images-container"></div>
+            </div>
+            <div class="playstyle-column">
+                <h2>Pick</h2>
+                <p>Pick compositions focus on securing eliminations through precision and burst damage, often from a distance. This playstyle leverages high-damage heroes capable of quickly taking out key targets, disrupting the enemy team's formation and strategy. However, Pick compositions can struggle against highly mobile teams that can evade their attempts at securing kills or against teams with significant sustain that can quickly recover from any damage dealt. The success of a Pick composition often hinges on the team's ability to consistently secure eliminations; failure to do so can lead to prolonged engagements where the Pick team is at a disadvantage.</p>
+                <div id="pick-playstyle" class="playstyle-container playstyle-images-container"></div>
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="character-selection">
+        <div id="character-portraits"></div> <!-- Portraits are generated here -->
+        <div id="team-compositions"></div>
+        <div id="character-dropdowns"></div>
+        
+    </div>
+</div>
+<div class="grid-container">
+    <!-- Team 1 Drop Zone -->
+    <div class="team-dropzone" id="team1" data-team="1"></div>
+    
+    <!-- Team 1 Analysis and Chart Area -->
+    <div class="team-analysis-container" id="team1-analysis">
+        <div class="chart-container" id="team1-charts">
+            <div class="chart-grid">
+                <div class="chart-card">
+                    <canvas id="team1-chart-brawl"></canvas>
+                    <div class="chart-value" id="team1-brawl-value"></div>
+                </div>
+                <div class="chart-card">
+                    <canvas id="team1-chart-dive"></canvas>
+                    <div class="chart-value" id="team1-dive-value"></div>
+                </div>
+                <div class="chart-card">
+                    <canvas id="team1-chart-pick"></canvas>
+                    <div class="chart-value" id="team1-pick-value"></div>
+                </div>
+                <div class="chart-card">
+                    <canvas id="team1-chart-utility"></canvas>
+                    <div class="chart-value" id="team1-utility-value"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Team 2 Drop Zone -->
+    <div class="team-dropzone" id="team2" data-team="2"></div>
+    
+    <!-- Team 2 Analysis and Chart Area -->
+    <div class="team-analysis-container" id="team2-analysis">
+        <div class="chart-container" id="team2-charts">
+            <div class="chart-grid">
+                <div class="chart-card">
+                    <canvas id="team2-chart-brawl"></canvas>
+                    <div class="chart-value" id="team2-brawl-value"></div>
+                </div>
+                <div class="chart-card">
+                    <canvas id="team2-chart-dive"></canvas>
+                    <div class="chart-value" id="team2-dive-value"></div>
+                </div>
+                <div class="chart-card">
+                    <canvas id="team2-chart-pick"></canvas>
+                    <div class="chart-value" id="team2-pick-value"></div>
+                </div>
+                <div class="chart-card">
+                    <canvas id="team2-chart-utility"></canvas>
+                    <div class="chart-value" id="team2-utility-value"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
