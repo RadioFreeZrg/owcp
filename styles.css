@@ -6,9 +6,10 @@ body {
 }
 
 #character-portraits {
+    position: relative; /* Continue to establish a positioning context for absolute children */
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Creates three columns of equal width */
-    gap: 20px; /* Adjust the space between columns */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px; /* Adjust if necessary */
 }
 
 .role-container {
@@ -16,6 +17,14 @@ body {
     flex-direction: column;
     align-items: center;
 }
+.role-divider {
+    border-left: 1px solid #ccc;
+    height: 100%;
+    position: absolute;
+    top: 0; /* Align to the top of the container */
+    /* Left value will be set inline via JavaScript */
+}
+
 .characters {
     display: grid;
     grid-template-columns: repeat(5, 1fr); /* Creates three columns */

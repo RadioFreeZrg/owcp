@@ -25,39 +25,39 @@ const rpsMechanics = {
     dive: 'pick', // Dive is strong against Pick
     pick: 'brawl', // Pick is strong against Brawl
 };
+const roles = ['damage', 'support', 'tank'];
 
 document.addEventListener('DOMContentLoaded', function() {
     fetch('combined_data.json')
         .then(response => response.json())
         .then(characters => {
             globalCharacters = characters; // Store fetched characters globally
-            displayCharactersByRole(characters, 'damage');
-            displayCharactersByRole(characters, 'support');
-            displayCharactersByRole(characters, 'tank');
+            initializeCharacterDisplay();
             setupDragAndDrop();
         })
         .catch(error => console.error('Error loading the JSON data:', error));
 });
 
-function displayCharactersByRole(characters, role) {
-    const container = document.getElementById('character-portraits');
-    const roleContainer = document.createElement('div');
-    roleContainer.className = `role-container ${role}`;
-    roleContainer.innerHTML = `<h2>${role.charAt(0).toUpperCase() + role.slice(1)} Characters</h2><div class="characters"></div>`;
-    container.appendChild(roleContainer);
+function initializeCharacterDisplay() {
+    displayRolesWithDividers(globalCharacters, roles);
+}
 
-    const charactersDiv = roleContainer.querySelector('.characters');
-    characters.filter(character => character.role === role).forEach(character => {
-        const characterDiv = document.createElement('div');
-        characterDiv.className = 'character';
-        characterDiv.setAttribute('draggable', true);
-        characterDiv.setAttribute('id', character.name.replace(/\s+/g, '-').toLowerCase());
-        characterDiv.setAttribute('data-character-name', character.name); // For identification in drop
-        characterDiv.innerHTML = `
-            <img src="${character.portrait}" alt="${character.name}">
-            <span>${character.name}</span>
-        `;
-        charactersDiv.appendChild(characterDiv);
+function displayRolesWithDividers(characters, roles) {
+    const characterPortraits = document.getElementById('character-portraits');
+    const numberOfDividers = roles.length - 1; // You will have one less divider than the number of roles
+    const columnWidth = 100 / roles.length; // Assuming equal width for each column
+
+    roles.forEach((role, index) => {
+        displayCharactersByRole(characters, role);
+        
+        if (index < roles.length - 1) {
+            const divider = document.createElement('div');
+            divider.className = 'role-divider';
+            // Adjust the percentage to account for the grid-gap and divider width if needed
+            const leftPosition = (columnWidth * (index + 1)) - (columnWidth / 2);
+            divider.style.left = `calc(${leftPosition}% + 305px)`; // Assuming the grid gap is 20px
+            characterPortraits.appendChild(divider);
+        }
     });
 }
 
@@ -235,10 +235,8 @@ function showResults() {
     updateDoughnutCharts('team1-chart', team1Results);
     updateDoughnutCharts('team2-chart', team2Results);
     highlightCompositionAdvantage(team1Results, team2Results);
-    updateDropZoneInstructionVisibility();
-        // New function calls to update UI for playstyle optimality
-        updatePlaystyleOptimalityUI('team1-charts');
-        updatePlaystyleOptimalityUI('team2-charts');
+    updateDropzoneInstructionVisibility(document.getElementById('team1'));
+    updateDropzoneInstructionVisibility(document.getElementById('team2'));
 
 }
 function removeCompositionHeader(teamId) {
@@ -602,30 +600,30 @@ function updateDropzoneInstructionVisibility(dropZone) {
     const hasCharacters = dropZone.querySelectorAll('.dropped-character').length > 0;
     instruction.style.visibility = hasCharacters ? 'hidden' : 'visible';
 }
-function updatePlaystyleOptimalityUI(teamChartsId) {
-    const chartsContainer = document.getElementById(teamChartsId);
-    if (!chartsContainer) return; // Exit if chart container not found
+function displayCharactersByRole(characters, role) {
+    const container = document.getElementById('character-portraits');
+    
+    // Create the role container
+    const roleContainer = document.createElement('div');
+    roleContainer.className = `role-container ${role}`;
+    roleContainer.innerHTML = `<h2>${role.charAt(0).toUpperCase() + role.slice(1)} Characters</h2>`;
+    const charactersDiv = document.createElement('div');
+    charactersDiv.className = 'characters';
 
-    // Create wrapper div for the first three charts
-    const playstyleOptimalityWrapper = document.createElement('div');
-    playstyleOptimalityWrapper.className = 'playstyle-optimality-wrapper';
+    // Append characters to the role-specific div
+    characters.filter(character => character.role === role).forEach(character => {
+        const characterDiv = document.createElement('div');
+        characterDiv.className = 'character';
+        characterDiv.setAttribute('draggable', 'true');
+        characterDiv.setAttribute('id', character.name.replace(/\s+/g, '-').toLowerCase());
+        characterDiv.setAttribute('data-character-name', character.name);
+        characterDiv.innerHTML = `
+            <img src="${character.portrait}" alt="${character.name}">
+            <span>${character.name}</span>
+        `;
+        charactersDiv.appendChild(characterDiv);
+    });
 
-    // Create and append the title element
-    const titleElement = document.createElement('h3');
-    titleElement.textContent = 'Playstyle Optimality';
-    playstyleOptimalityWrapper.appendChild(titleElement);
-
-    // Assuming the first three chart cards are directly within the chartsContainer
-    const chartCards = chartsContainer.querySelectorAll('.chart-card');
-    if (chartCards.length >= 3) {
-        // Move the first three chart cards into the wrapper
-        chartCards.forEach((card, index) => {
-            if (index < 3) playstyleOptimalityWrapper.appendChild(card);
-        });
-    }
-
-    // Prepend the wrapper to the chartsContainer, only if not already there
-    if (!chartsContainer.querySelector('.playstyle-optimality-wrapper')) {
-        chartsContainer.insertBefore(playstyleOptimalityWrapper, chartsContainer.firstChild);
-    }
+    roleContainer.appendChild(charactersDiv);
+    container.appendChild(roleContainer);
 }
