@@ -271,53 +271,78 @@ function getPlaystyleAnalysis(strongestPlaystyle, strongAgainst) {
     return analysisText;
 }
 function determineStrongestPlaystyle(results) {
-    // Existing logic to determine the strongest playstyle remains unchanged
+    const playstyleScores = {
+        brawl: results.compositionFit.brawl,
+        dive: results.compositionFit.dive,
+        pick: results.compositionFit.pick
+    };
+
+    let isMixedComposition = Object.values(playstyleScores).every(score => score > 100) &&
+                             Object.values(playstyleScores).every(score => score < 400);
+
     let strongestPlaystyle = '';
+    let secondStrongestPlaystyle = '';
     let highestScore = 0;
-    let lowestScore = Infinity;
-    let weakestPlaystyle = '';
+    let secondHighestScore = 0;
 
-    for (const [playstyle, score] of Object.entries(results.compositionFit)) {
+    for (const [playstyle, score] of Object.entries(playstyleScores)) {
         if (score > highestScore) {
-            strongestPlaystyle = playstyle;
+            secondHighestScore = highestScore; // Previous highest becomes second highest
+            secondStrongestPlaystyle = strongestPlaystyle; // Update second strongest
             highestScore = score;
-        }
-        if (score < lowestScore) {
-            weakestPlaystyle = playstyle;
-            lowestScore = score;
+            strongestPlaystyle = playstyle;
+        } else if (score > secondHighestScore) {
+            secondHighestScore = score;
+            secondStrongestPlaystyle = playstyle;
         }
     }
 
-    // Determining what each playstyle is strongest and weakest against
     let strongAgainst = '';
-    let weakAgainst = '';
-    switch (strongestPlaystyle) {
-        case 'brawl':
-            strongAgainst = 'dive';
-            weakAgainst = 'pick';
-            break;
-        case 'dive':
-            strongAgainst = 'pick';
-            weakAgainst = 'brawl';
-            break;
-        case 'pick':
-            strongAgainst = 'brawl';
-            weakAgainst = 'dive';
-            break;
+    if (isMixedComposition) {
+        return {
+            strongestPlaystyle: 'mixed',
+            secondStrongestPlaystyle: secondStrongestPlaystyle,
+            isMixed: true
+        };
+    } else {
+        // Original logic for determining the playstyle it is strongest against
+        switch (strongestPlaystyle) {
+            case 'brawl':
+                strongAgainst = 'dive';
+                break;
+            case 'dive':
+                strongAgainst = 'pick';
+                break;
+            case 'pick':
+                strongAgainst = 'brawl';
+                break;
+        }
     }
 
-    return { strongestPlaystyle, strongAgainst, weakestPlaystyle, weakAgainst };
+    return { strongestPlaystyle, strongAgainst, isMixed: false };
 }
 
 function displayCompositionHeader(teamId, results) {
-    const { strongestPlaystyle, strongAgainst, weakestPlaystyle, weakAgainst } = determineStrongestPlaystyle(results);
+    const { strongestPlaystyle, strongAgainst, weakestPlaystyle, weakAgainst, isMixed, secondStrongestPlaystyle } = determineStrongestPlaystyle(results);
 
-    // Update the header to include information about both strengths and weaknesses
-    const headerText = `This is a ${strongestPlaystyle} composition. Strongest against ${strongAgainst} compositions and weakest against ${weakAgainst} compositions.`;
+    let headerText = '';
+    if (isMixed) {
+        headerText = `This is a mixed composition, featuring elements of ${strongestPlaystyle} and ${secondStrongestPlaystyle}. There is not a clear playstyle advantage, and the composition may struggle against more synergistic compositions.`;
+    } else {
+        headerText = `This is a ${strongestPlaystyle} composition. Strongest against ${strongAgainst} compositions and weakest against ${weakAgainst} compositions.`;
+    }
+
+    // Assuming getPlaystyleAnalysis is a function that returns a string of analysis text based on the playstyle strengths and weaknesses
+    let analysisText = '';
+    if (isMixed) {
+        analysisText = "Mixed compositions can offer versatility but may lack the focused strategy that pure playstyle compositions offer. Maximizing synergy within the chosen elements of each playstyle is crucial.";
+    } else {
+        analysisText = getPlaystyleAnalysis(strongestPlaystyle, strongAgainst, weakestPlaystyle, weakAgainst);
+    }
+
     const headerElement = document.createElement('h2');
     headerElement.textContent = headerText;
 
-    const analysisText = getPlaystyleAnalysis(strongestPlaystyle, strongAgainst, weakestPlaystyle, weakAgainst);
     const analysisParagraph = document.createElement('p');
     analysisParagraph.textContent = analysisText;
 
@@ -335,19 +360,23 @@ function displayCompositionHeader(teamId, results) {
     }
 }
 
-function getPlaystyleAnalysis(strongestPlaystyle, strongAgainst, weakAgainst) {
+function getPlaystyleAnalysis(strongestPlaystyle, strongAgainst, weakestPlaystyle, weakAgainst, isMixed, secondStrongestPlaystyle) {
     let analysisText = '';
 
-    switch(strongestPlaystyle) {
-        case 'brawl':
-            analysisText = `The Brawl composition is effective at close quarters and sustained combat, making it strong against Dive compositions that rely on quick engagements. Brawl can resist the initial burst and counter-attack. However, it struggles against Pick compositions, which can eliminate key targets from a distance before Brawl can close in. It relies on player awareness to negate burst damage and ensure your team remains at full strength until it secures a kill that generates advantage, allowing the team with more living players to engage with more aggression while the odds of success for the other team are lower.`;
-            break;
-        case 'dive':
-            analysisText = `The Dive composition uses high mobility to quickly engage and eliminate priority targets, making it effective against Pick compositions that rely on precision from a distance. Dive can close the gap before Picks can secure eliminations. However, it's weaker against Brawl compositions, which can sustain the initial assault and counter-attack in close quarters. It requires a large amount of coordination and map awareness from all players to execute effectively.`;
-            break;
-        case 'pick':
-            analysisText = `The Pick composition focuses on eliminating key targets with precision damage, making it strong against Brawl compositions that cluster together, allowing for impactful picks. However, it struggles against Dive compositions, whose mobility allows them to evade Pick's damage and close the distance quickly. This composition relies on a high degree of mechanical skill from damage players and viligant awareness on the part of support and tank players.`;
-            break;
+    if (isMixed) {
+        analysisText = `Mixed compositions offer a balanced approach but may lack the cohesiveness of a focused strategy. They can adapt to more situations but may not have the overwhelming advantage in any single aspect. Against ${strongAgainst} compositions, the mixed elements provide versatility, yet against ${weakAgainst} compositions, finding and exploiting specific weaknesses becomes crucial. Ensuring that the chosen elements from each playstyle work well together and complement each other's strengths will be key to overcoming more synergistic enemy compositions.`;
+    } else {
+        switch(strongestPlaystyle) {
+            case 'brawl':
+                analysisText = `The Brawl composition is effective at close quarters and sustained combat, making it strong against Dive compositions that rely on quick engagements. Brawl can resist the initial burst and counter-attack. However, it struggles against Pick compositions, which can eliminate key targets from a distance before Brawl can close in. It relies on player awareness to negate burst damage and ensure your team remains at full strength until it secures a kill that generates advantage, allowing the team with more living players to engage with more aggression while the odds of success for the other team are lower.`;
+                break;
+            case 'dive':
+                analysisText = `The Dive composition uses high mobility to quickly engage and eliminate priority targets, making it effective against Pick compositions that rely on precision from a distance. Dive can close the gap before Picks can secure eliminations. However, it's weaker against Brawl compositions, which can sustain the initial assault and counter-attack in close quarters. It requires a large amount of coordination and map awareness from all players to execute effectively.`;
+                break;
+            case 'pick':
+                analysisText = `The Pick composition focuses on eliminating key targets with precision damage, making it strong against Brawl compositions that cluster together, allowing for impactful picks. However, it struggles against Dive compositions, whose mobility allows them to evade Pick's damage and close the distance quickly. This composition relies on a high degree of mechanical skill from damage players and viligant awareness on the part of support and tank players.`;
+                break;
+        }
     }
 
     return analysisText;
@@ -494,20 +523,35 @@ function appendCharacterImagesForPlaystyle(playstyle) {
     });
 }
 function highlightCompositionAdvantage(team1Results, team2Results) {
-    const team1Strongest = determineStrongestPlaystyle(team1Results);
-    const team2Strongest = determineStrongestPlaystyle(team2Results);
+    const { strongestPlaystyle: team1StrongestPlaystyle } = determineStrongestPlaystyle(team1Results);
+    const { strongestPlaystyle: team2StrongestPlaystyle } = determineStrongestPlaystyle(team2Results);
 
-    // Determine which team has the advantage
-    if (rpsMechanics[team1Strongest.strongestPlaystyle] === team2Strongest.strongestPlaystyle) {
-        // Team 1 has the advantage
-        highlightTeam('team1', 'green');
-        highlightTeam('team2', 'red');
-    } else if (rpsMechanics[team2Strongest.strongestPlaystyle] === team1Strongest.strongestPlaystyle) {
-        // Team 2 has the advantage
+    // Check for mixed compositions directly
+    if (team1StrongestPlaystyle === "mixed" && team2StrongestPlaystyle !== "mixed") {
+        // Team 2 has the advantage if it is not a mixed composition
         highlightTeam('team1', 'red');
         highlightTeam('team2', 'green');
+    } else if (team2StrongestPlaystyle === "mixed" && team1StrongestPlaystyle !== "mixed") {
+        // Team 1 has the advantage if it is not a mixed composition
+        highlightTeam('team1', 'green');
+        highlightTeam('team2', 'red');
+    } else if (team1StrongestPlaystyle !== "mixed" && team2StrongestPlaystyle !== "mixed") {
+        // If neither team is a mixed composition, check RPS mechanics
+        if (rpsMechanics[team1StrongestPlaystyle] === team2StrongestPlaystyle) {
+            // Team 1 has the advantage
+            highlightTeam('team1', 'green');
+            highlightTeam('team2', 'red');
+        } else if (rpsMechanics[team2StrongestPlaystyle] === team1StrongestPlaystyle) {
+            // Team 2 has the advantage
+            highlightTeam('team1', 'red');
+            highlightTeam('team2', 'green');
+        } else {
+            // No clear advantage or disadvantage
+            highlightTeam('team1', 'grey');
+            highlightTeam('team2', 'grey');
+        }
     } else {
-        // No clear advantage based on the RPS mechanics
+        // Both teams are mixed compositions or the matchup does not follow RPS mechanics directly
         highlightTeam('team1', 'grey');
         highlightTeam('team2', 'grey');
     }
