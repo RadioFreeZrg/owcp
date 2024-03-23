@@ -327,7 +327,7 @@ function displayCompositionHeader(teamId, results) {
 
     let headerText = '';
     if (isMixed) {
-        headerText = `This is a mixed composition, featuring elements of ${strongestPlaystyle} and ${secondStrongestPlaystyle}. There is not a clear playstyle advantage, and the composition may struggle against more synergistic compositions.`;
+        headerText = `This is a mixed composition, featuring elements of ${secondStrongestPlaystyle}. There is not a clear playstyle advantage, and the composition may struggle against more synergistic compositions.`;
     } else {
         headerText = `This is a ${strongestPlaystyle} composition. Strongest against ${strongAgainst} compositions and weakest against ${weakAgainst} compositions.`;
     }
