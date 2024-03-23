@@ -55,10 +55,16 @@
 </div>
 <div class="grid-container">
     <!-- Team 1 Drop Zone -->
-    <div class="team-dropzone" id="team1" data-team="1"></div>
+    <div class="dropconcon">
+        <div class="dropzone-label">Team 1</div>
+        <div class="team-dropzone" id="team1" data-team="1">
+            <div class="dropzone-instruction">Drop characters here</div>
+        </div>
+    </div>
     
     <!-- Team 1 Analysis and Chart Area -->
     <div class="team-analysis-container" id="team1-analysis">
+        <div class="playstyle-optimality-title">Playstyle Optimality</div>
         <div class="chart-container" id="team1-charts">
             <div class="chart-grid">
                 <div class="chart-card">
@@ -73,6 +79,7 @@
                     <canvas id="team1-chart-pick"></canvas>
                     <div class="chart-value" id="team1-pick-value"></div>
                 </div>
+                <!-- The utility chart can be moved outside the playstyle optimality section if desired -->
                 <div class="chart-card">
                     <canvas id="team1-chart-utility"></canvas>
                     <div class="chart-value" id="team1-utility-value"></div>
@@ -82,10 +89,16 @@
     </div>
 
     <!-- Team 2 Drop Zone -->
-    <div class="team-dropzone" id="team2" data-team="2"></div>
+    <div class="dropconcon">
+        <div class="dropzone-label">Team 2</div>
+        <div class="team-dropzone" id="team2" data-team="2">
+            <div class="dropzone-instruction">Drop characters here</div>
+        </div>
+    </div>
     
     <!-- Team 2 Analysis and Chart Area -->
     <div class="team-analysis-container" id="team2-analysis">
+        <div class="playstyle-optimality-title">Playstyle Optimality</div>
         <div class="chart-container" id="team2-charts">
             <div class="chart-grid">
                 <div class="chart-card">
@@ -100,6 +113,7 @@
                     <canvas id="team2-chart-pick"></canvas>
                     <div class="chart-value" id="team2-pick-value"></div>
                 </div>
+                <!-- The utility chart can be moved outside the playstyle optimality section if desired -->
                 <div class="chart-card">
                     <canvas id="team2-chart-utility"></canvas>
                     <div class="chart-value" id="team2-utility-value"></div>

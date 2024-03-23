@@ -51,6 +51,9 @@ body {
 #team-compositions {
     margin-top: 20px;
 }
+.dropconcon {
+position: relative;
+}
 
 
 .dropped-character {
@@ -58,7 +61,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100px; /* Fixed width */
+    width: 80px; /* Fixed width */
     height: auto;
     text-align: center;
 }
@@ -83,12 +86,13 @@ body {
 }
 .grid-container {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Two columns of equal width */
+    grid-template-columns: 1fr 3fr; /* Two columns of equal width */
     width: 100%; /* Take up full width of its container */
     gap: 50px; /* Adds spacing between the columns */
 }
 .team-dropzone {
     border: 2px dashed #ccc;
+    position:relative;
     padding: 10px;
     min-height: 200px;
     display: flex;
@@ -241,4 +245,31 @@ body {
     background-color: #f9f9f9; /* Light background for distinction */
     border-radius: 8px; /* Optional rounded corners */
     box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Optional shadow for depth */
+    width: 100%;
+}
+.dropzone-label {
+    position: relative;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-weight: bold;
+    color: gray;
+    z-index: 1;
+}
+
+.dropzone-instruction {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    color: gray;
+    pointer-events: none; /* Ignore mouse events */
+}
+.playstyle-optimality-title {
+    font-size: 20px;
+    text-align: center;
+    margin: 20px 0;
+    font-weight: bold;
+    color: gray;
 }

@@ -62,10 +62,10 @@ function displayCharactersByRole(characters, role) {
 }
 
 function setupDragAndDrop() {
-    document.getElementById('character-portraits').addEventListener('dragstart', function(e) {
-        if (e.target && e.target.matches('.character')) {
-            dragStart(e);
-        }
+    document.querySelectorAll('.character').forEach(character => {
+        character.addEventListener('dragstart', function(e) {
+            dragStart(e, character);
+        });
     });
 
     document.querySelectorAll('.team-dropzone').forEach(zone => {
@@ -74,8 +74,24 @@ function setupDragAndDrop() {
     });
 }
 
-function dragStart(e) {
-    e.dataTransfer.setData('text/plain', e.target.id);
+function dragStart(e, character) {
+    e.dataTransfer.setData('text/plain', character.id);
+    
+    // Create a helper element for the drag image
+    var dragIcon = document.createElement('img');
+    dragIcon.src = character.querySelector('img').src; // Assuming the image you want to show during dragging is inside the character element
+    dragIcon.width = 50; // Set the size of the drag image
+    dragIcon.height = 50;
+    document.body.appendChild(dragIcon); // Append to the body to make it part of the DOM
+    dragIcon.style.position = 'absolute'; // Position it absolutely so it doesn't affect layout
+    dragIcon.style.top = '-100px'; // Hide it from view initially
+
+    // Use the helper element as the drag image
+    // Note: The setDragImage offset coordinates might need to be adjusted based on your specific needs
+    e.dataTransfer.setDragImage(dragIcon, 25, 25);
+
+    // Clean up the dragIcon after the drag operation is complete
+    setTimeout(() => document.body.removeChild(dragIcon), 0);
 }
 
 function dragOver(e) {
@@ -219,6 +235,10 @@ function showResults() {
     updateDoughnutCharts('team1-chart', team1Results);
     updateDoughnutCharts('team2-chart', team2Results);
     highlightCompositionAdvantage(team1Results, team2Results);
+    updateDropZoneInstructionVisibility();
+        // New function calls to update UI for playstyle optimality
+        updatePlaystyleOptimalityUI('team1-charts');
+        updatePlaystyleOptimalityUI('team2-charts');
 
 }
 function removeCompositionHeader(teamId) {
@@ -277,18 +297,17 @@ function determineStrongestPlaystyle(results) {
         pick: results.compositionFit.pick
     };
 
-    let isMixedComposition = Object.values(playstyleScores).every(score => score > 100) &&
-                             Object.values(playstyleScores).every(score => score < 400);
-
+    // Initialize strongest and second strongest playstyle variables
     let strongestPlaystyle = '';
     let secondStrongestPlaystyle = '';
     let highestScore = 0;
     let secondHighestScore = 0;
 
+    // Iterate over playstyleScores to find the strongest and second strongest playstyles
     for (const [playstyle, score] of Object.entries(playstyleScores)) {
         if (score > highestScore) {
-            secondHighestScore = highestScore; // Previous highest becomes second highest
-            secondStrongestPlaystyle = strongestPlaystyle; // Update second strongest
+            secondHighestScore = highestScore;
+            secondStrongestPlaystyle = strongestPlaystyle;
             highestScore = score;
             strongestPlaystyle = playstyle;
         } else if (score > secondHighestScore) {
@@ -297,49 +316,60 @@ function determineStrongestPlaystyle(results) {
         }
     }
 
+    // Determine if the composition is mixed based on the scores
+    let isMixedComposition = Object.values(playstyleScores).every(score => score > 100) && !Object.values(playstyleScores).some(score => score > 400);
+
     let strongAgainst = '';
-    if (isMixedComposition) {
-        return {
-            strongestPlaystyle: 'mixed',
-            secondStrongestPlaystyle: secondStrongestPlaystyle,
-            isMixed: true
-        };
-    } else {
-        // Original logic for determining the playstyle it is strongest against
+    let weakAgainst = '';
+
+    // Define logic for determining strongAgainst and weakAgainst, accounting for mixed compositions
+    if (!isMixedComposition) {
+        // Example logic for determining strongAgainst and weakAgainst
         switch (strongestPlaystyle) {
             case 'brawl':
                 strongAgainst = 'dive';
+                weakAgainst = 'pick';
                 break;
             case 'dive':
                 strongAgainst = 'pick';
+                weakAgainst = 'brawl';
                 break;
             case 'pick':
                 strongAgainst = 'brawl';
+                weakAgainst = 'dive';
                 break;
         }
     }
 
-    return { strongestPlaystyle, strongAgainst, isMixed: false };
+    // Return an object that includes whether the composition is mixed
+    return {
+        strongestPlaystyle: strongestPlaystyle,
+        secondStrongestPlaystyle,
+        strongAgainst,
+        weakAgainst,
+        isMixed: isMixedComposition
+    };
 }
 
 function displayCompositionHeader(teamId, results) {
-    const { strongestPlaystyle, strongAgainst, weakestPlaystyle, weakAgainst, isMixed, secondStrongestPlaystyle } = determineStrongestPlaystyle(results);
+    const {
+        strongestPlaystyle,
+        secondStrongestPlaystyle,
+        strongAgainst,
+        weakAgainst,
+        isMixed
+    } = determineStrongestPlaystyle(results);
 
-    let headerText = '';
+    let headerText;
     if (isMixed) {
-        headerText = `This is a mixed composition, featuring elements of ${secondStrongestPlaystyle}. There is not a clear playstyle advantage, and the composition may struggle against more synergistic compositions.`;
+        headerText = `This is a mixed composition, featuring elements primarily of ${strongestPlaystyle} and ${secondStrongestPlaystyle} playstyles. There is not a clear playstyle advantage, and the composition may struggle against more synergistic compositions.`;
     } else {
         headerText = `This is a ${strongestPlaystyle} composition. Strongest against ${strongAgainst} compositions and weakest against ${weakAgainst} compositions.`;
     }
 
-    // Assuming getPlaystyleAnalysis is a function that returns a string of analysis text based on the playstyle strengths and weaknesses
-    let analysisText = '';
-    if (isMixed) {
-        analysisText = "Mixed compositions can offer versatility but may lack the focused strategy that pure playstyle compositions offer. Maximizing synergy within the chosen elements of each playstyle is crucial.";
-    } else {
-        analysisText = getPlaystyleAnalysis(strongestPlaystyle, strongAgainst, weakestPlaystyle, weakAgainst);
-    }
+    const analysisText = getPlaystyleAnalysis(strongestPlaystyle, strongAgainst, weakAgainst, isMixed, secondStrongestPlaystyle);
 
+    // Update DOM elements
     const headerElement = document.createElement('h2');
     headerElement.textContent = headerText;
 
@@ -360,11 +390,10 @@ function displayCompositionHeader(teamId, results) {
     }
 }
 
-function getPlaystyleAnalysis(strongestPlaystyle, strongAgainst, weakestPlaystyle, weakAgainst, isMixed, secondStrongestPlaystyle) {
+function getPlaystyleAnalysis(strongestPlaystyle, strongAgainst, weakAgainst, isMixed, secondStrongestPlaystyle) {
     let analysisText = '';
-
     if (isMixed) {
-        analysisText = `Mixed compositions offer a balanced approach but may lack the cohesiveness of a focused strategy. They can adapt to more situations but may not have the overwhelming advantage in any single aspect. Against ${strongAgainst} compositions, the mixed elements provide versatility, yet against ${weakAgainst} compositions, finding and exploiting specific weaknesses becomes crucial. Ensuring that the chosen elements from each playstyle work well together and complement each other's strengths will be key to overcoming more synergistic enemy compositions.`;
+        analysisText = `This mixed composition offer flexibility by incorporating elements from ${strongestPlaystyle} and ${secondStrongestPlaystyle} playstyles. However, it may lack the specialized strengths of a focused strategy, potentially struggling against more cohesive team compositions. These teams should capitalize on their adaptability to secure advantages where possible.`;
     } else {
         switch(strongestPlaystyle) {
             case 'brawl':
@@ -426,16 +455,18 @@ function updateDoughnutCharts(teamNumber, results) {
     const maxValues = { brawl: 500, dive: 500, pick: 500, utility: 20 };
     metrics.forEach(metric => {
         const chartId = `${teamNumber}-${metric}`;
-        const maxValue = maxValues[metric];
         const metricValue = results.compositionFit[metric] ?? results.utilityScore;
-        const remainingValue = maxValue - metricValue;
+        // Calculate percentage of the metric value relative to its maximum value
+        const metricPercentage = (metricValue / maxValues[metric] * 100).toFixed(2);
+        // For remaining value calculation, it's now 100 - metricPercentage since we're dealing with percentages
+        const remainingPercentage = (100 - metricPercentage).toFixed(2);
 
         const data = {
             labels: [metric, 'Remaining'],
             datasets: [{
-                data: [results.compositionFit[metric] ?? results.utilityScore, maxValues[metric] - (results.compositionFit[metric] ?? results.utilityScore)],
+                data: [metricPercentage, remainingPercentage],
                 backgroundColor: metricColors[metric].chart,
-                borderColor: ['rgba(255,255,255,1)', 'rgba(255,255,255,1)'], // White borders for clarity
+                borderColor: ['rgba(255,255,255,1)', 'rgba(255,255,255,1)'],
                 borderWidth: 2
             }]
         };
@@ -451,7 +482,6 @@ function updateOrCreateChart(chartId, data, type, metric) {
         return;
     }
     const ctx = element.getContext('2d');
-    const valueToDisplay = data.datasets[0].data[0];
 
     const options = getChartOptions(type, metric);
 
@@ -466,13 +496,15 @@ function updateOrCreateChart(chartId, data, type, metric) {
             options,
         });
     }
+    // Update the displayed value to reflect the percentage of the primary metric score
     let valueDisplayElement = document.querySelector(`#${chartId}-value`);
     if (!valueDisplayElement) {
         valueDisplayElement = document.createElement('div');
         valueDisplayElement.id = `${chartId}-value`;
         element.parentElement.appendChild(valueDisplayElement);
     }
-    valueDisplayElement.innerHTML = `${metric.toUpperCase()}: ${valueToDisplay}`;
+    // Ensure the displayed value matches the format "{Metric}: {Percentage}%"
+    valueDisplayElement.innerHTML = `${metric.toUpperCase()}: ${data.datasets[0].data[0]}%`;
 }
 function closeOverlay() {
     document.getElementById('overlay').style.display = 'none';
@@ -523,35 +555,34 @@ function appendCharacterImagesForPlaystyle(playstyle) {
     });
 }
 function highlightCompositionAdvantage(team1Results, team2Results) {
-    const { strongestPlaystyle: team1StrongestPlaystyle } = determineStrongestPlaystyle(team1Results);
-    const { strongestPlaystyle: team2StrongestPlaystyle } = determineStrongestPlaystyle(team2Results);
+    const team1Data = determineStrongestPlaystyle(team1Results);
+    const team2Data = determineStrongestPlaystyle(team2Results);
 
-    // Check for mixed compositions directly
-    if (team1StrongestPlaystyle === "mixed" && team2StrongestPlaystyle !== "mixed") {
-        // Team 2 has the advantage if it is not a mixed composition
+    // Apply standard RPS logic if both teams are mixed
+    if (team1Data.isMixed && team2Data.isMixed) {
+        compareUsingRPS(team1Data.strongestPlaystyle, team2Data.strongestPlaystyle);
+    } else if (team1Data.isMixed && !team2Data.isMixed) {
+        // Team 2 has a clear playstyle and thus has the advantage
         highlightTeam('team1', 'red');
         highlightTeam('team2', 'green');
-    } else if (team2StrongestPlaystyle === "mixed" && team1StrongestPlaystyle !== "mixed") {
-        // Team 1 has the advantage if it is not a mixed composition
+    } else if (!team1Data.isMixed && team2Data.isMixed) {
+        // Team 1 has a clear playstyle and thus has the advantage
         highlightTeam('team1', 'green');
         highlightTeam('team2', 'red');
-    } else if (team1StrongestPlaystyle !== "mixed" && team2StrongestPlaystyle !== "mixed") {
-        // If neither team is a mixed composition, check RPS mechanics
-        if (rpsMechanics[team1StrongestPlaystyle] === team2StrongestPlaystyle) {
-            // Team 1 has the advantage
-            highlightTeam('team1', 'green');
-            highlightTeam('team2', 'red');
-        } else if (rpsMechanics[team2StrongestPlaystyle] === team1StrongestPlaystyle) {
-            // Team 2 has the advantage
-            highlightTeam('team1', 'red');
-            highlightTeam('team2', 'green');
-        } else {
-            // No clear advantage or disadvantage
-            highlightTeam('team1', 'grey');
-            highlightTeam('team2', 'grey');
-        }
     } else {
-        // Both teams are mixed compositions or the matchup does not follow RPS mechanics directly
+        // Standard RPS logic if neither team is mixed
+        compareUsingRPS(team1Data.strongestPlaystyle, team2Data.strongestPlaystyle);
+    }
+}
+
+function compareUsingRPS(team1StrongestPlaystyle, team2StrongestPlaystyle) {
+    if (rpsMechanics[team1StrongestPlaystyle] === team2StrongestPlaystyle) {
+        highlightTeam('team1', 'green');
+        highlightTeam('team2', 'red');
+    } else if (rpsMechanics[team2StrongestPlaystyle] === team1StrongestPlaystyle) {
+        highlightTeam('team1', 'red');
+        highlightTeam('team2', 'green');
+    } else {
         highlightTeam('team1', 'grey');
         highlightTeam('team2', 'grey');
     }
@@ -564,5 +595,37 @@ function highlightTeam(teamId, color) {
         analysisContainer.style.borderColor = color;
         analysisContainer.style.borderWidth = "2px";
         analysisContainer.style.borderStyle = "solid";
+    }
+}
+function updateDropzoneInstructionVisibility(dropZone) {
+    const instruction = dropZone.querySelector('.dropzone-instruction');
+    const hasCharacters = dropZone.querySelectorAll('.dropped-character').length > 0;
+    instruction.style.visibility = hasCharacters ? 'hidden' : 'visible';
+}
+function updatePlaystyleOptimalityUI(teamChartsId) {
+    const chartsContainer = document.getElementById(teamChartsId);
+    if (!chartsContainer) return; // Exit if chart container not found
+
+    // Create wrapper div for the first three charts
+    const playstyleOptimalityWrapper = document.createElement('div');
+    playstyleOptimalityWrapper.className = 'playstyle-optimality-wrapper';
+
+    // Create and append the title element
+    const titleElement = document.createElement('h3');
+    titleElement.textContent = 'Playstyle Optimality';
+    playstyleOptimalityWrapper.appendChild(titleElement);
+
+    // Assuming the first three chart cards are directly within the chartsContainer
+    const chartCards = chartsContainer.querySelectorAll('.chart-card');
+    if (chartCards.length >= 3) {
+        // Move the first three chart cards into the wrapper
+        chartCards.forEach((card, index) => {
+            if (index < 3) playstyleOptimalityWrapper.appendChild(card);
+        });
+    }
+
+    // Prepend the wrapper to the chartsContainer, only if not already there
+    if (!chartsContainer.querySelector('.playstyle-optimality-wrapper')) {
+        chartsContainer.insertBefore(playstyleOptimalityWrapper, chartsContainer.firstChild);
     }
 }
