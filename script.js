@@ -11,7 +11,7 @@ let metricColors = {
         chart: ['rgba(0, 191, 255, 0.5)', 'rgba(0, 191, 255, 0.2)'], // Vibrant blue
         background: 'rgba(224, 255, 255, 1)' // Light Cyan
     },
-    pick: {
+    poke: {
         chart: ['rgba(220, 20, 60, 0.5)', 'rgba(220, 20, 60, 0.2)'], // Crimson
         background: 'rgba(255, 182, 193, 1)' // Pale Pink
     },
@@ -22,8 +22,8 @@ let metricColors = {
 };
 const rpsMechanics = {
     brawl: 'dive', // Brawl is strong against Dive
-    dive: 'pick', // Dive is strong against Pick
-    pick: 'brawl', // Pick is strong against Brawl
+    dive: 'poke', // Dive is strong against poke
+    poke: 'brawl', // poke is strong against Brawl
 };
 const roles = ['damage', 'support', 'tank'];
 
@@ -177,7 +177,7 @@ function appendCharacterToDropZone(dropZone, characterData, characterId) {
 function evaluateTeam(team) {
     const evaluation = {
         hitpoints: { health: 0, shields: 0, armor: 0, total: 0 },
-        compositionFit: { brawl: 0, dive: 0, pick: 0 },
+        compositionFit: { brawl: 0, dive: 0, poke: 0 },
         utilityScore: 0
     };
 
@@ -196,7 +196,7 @@ function evaluateTeam(team) {
 
         evaluation.compositionFit.brawl += character['composition fit'].brawl;
         evaluation.compositionFit.dive += character['composition fit'].dive;
-        evaluation.compositionFit.pick += character['composition fit'].pick;
+        evaluation.compositionFit.poke += character['composition fit'].poke;
 
         Object.keys(character.utility).forEach(key => {
             const utilityType = character.utility[key];
@@ -216,9 +216,9 @@ console.log(team2); // Should log an array of objects
 
 function showResults() {
     const team1Results = evaluateTeam(team1);
-    console.log(team1Results.compositionFit); // Should show { brawl: X, dive: Y, pick: Z }
+    console.log(team1Results.compositionFit); // Should show { brawl: X, dive: Y, poke: Z }
     const team2Results = evaluateTeam(team2);
-    console.log(team2Results.compositionFit); // Should show { brawl: X, dive: Y, pick: Z }
+    console.log(team2Results.compositionFit); // Should show { brawl: X, dive: Y, poke: Z }
 
      // Display or remove composition headers based on team sizes
      if (team1.length === 5) {
@@ -280,10 +280,10 @@ function getPlaystyleAnalysis(strongestPlaystyle, strongAgainst) {
             analysisText = 'Brawl compositions excel in close-quarters combat and sustain, making them particularly effective against Dive compositions that rely on quick engagements and high mobility.';
             break;
         case 'dive':
-            analysisText = 'Dive compositions are great at disrupting enemy lines and targeting key backline heroes, giving them an edge over Pick compositions that depend on positioning and ranged damage.';
+            analysisText = 'Dive compositions are great at disrupting enemy lines and targeting key backline heroes, giving them an edge over Poke compositions that depend on positioning and ranged damage.';
             break;
-        case 'pick':
-            analysisText = 'Pick compositions focus on securing early eliminations with precision damage, making them strong against Brawl compositions that depend on grouped formations and sustain.';
+        case 'poke':
+            analysisText = 'Poke compositions focus on securing early eliminations with precision damage, making them strong against Brawl compositions that depend on grouped formations and sustain.';
             break;
     }
     return analysisText;
@@ -292,7 +292,7 @@ function determineStrongestPlaystyle(results) {
     const playstyleScores = {
         brawl: results.compositionFit.brawl,
         dive: results.compositionFit.dive,
-        pick: results.compositionFit.pick
+        poke: results.compositionFit.poke
     };
 
     // Initialize strongest and second strongest playstyle variables
@@ -326,13 +326,13 @@ function determineStrongestPlaystyle(results) {
         switch (strongestPlaystyle) {
             case 'brawl':
                 strongAgainst = 'dive';
-                weakAgainst = 'pick';
+                weakAgainst = 'poke';
                 break;
             case 'dive':
-                strongAgainst = 'pick';
+                strongAgainst = 'poke';
                 weakAgainst = 'brawl';
                 break;
-            case 'pick':
+            case 'poke':
                 strongAgainst = 'brawl';
                 weakAgainst = 'dive';
                 break;
@@ -395,13 +395,13 @@ function getPlaystyleAnalysis(strongestPlaystyle, strongAgainst, weakAgainst, is
     } else {
         switch(strongestPlaystyle) {
             case 'brawl':
-                analysisText = `The Brawl composition is effective at close quarters and sustained combat, making it strong against Dive compositions that rely on quick engagements. Brawl can resist the initial burst and counter-attack. However, it struggles against Pick compositions, which can eliminate key targets from a distance before Brawl can close in. It relies on player awareness to negate burst damage and ensure your team remains at full strength until it secures a kill that generates advantage, allowing the team with more living players to engage with more aggression while the odds of success for the other team are lower.`;
+                analysisText = `The Brawl composition is effective at close quarters and sustained combat, making it strong against Dive compositions that rely on quick engagements. Brawl can resist the initial burst and counter-attack. However, it struggles against Poke compositions, which can eliminate key targets from a distance before Brawl can close in. It relies on player awareness to negate burst damage and ensure your team remains at full strength until it secures a kill that generates advantage, allowing the team with more living players to engage with more aggression while the odds of success for the other team are lower.`;
                 break;
             case 'dive':
-                analysisText = `The Dive composition uses high mobility to quickly engage and eliminate priority targets, making it effective against Pick compositions that rely on precision from a distance. Dive can close the gap before Picks can secure eliminations. However, it's weaker against Brawl compositions, which can sustain the initial assault and counter-attack in close quarters. It requires a large amount of coordination and map awareness from all players to execute effectively.`;
+                analysisText = `The Dive composition uses high mobility to quickly engage and eliminate priority targets, making it effective against Poke compositions that rely on precision from a distance. Dive can close the gap before picks can secure eliminations. However, it's weaker against Brawl compositions, which can sustain the initial assault and counter-attack in close quarters. It requires a large amount of coordination and map awareness from all players to execute effectively.`;
                 break;
-            case 'pick':
-                analysisText = `The Pick composition focuses on eliminating key targets with precision damage, making it strong against Brawl compositions that cluster together, allowing for impactful picks. However, it struggles against Dive compositions, whose mobility allows them to evade Pick's damage and close the distance quickly. This composition relies on a high degree of mechanical skill from damage players and viligant awareness on the part of support and tank players.`;
+            case 'poke':
+                analysisText = `The Poke composition focuses on eliminating key targets with precision damage, making it strong against Brawl compositions that cluster together, allowing for impactful picks. However, it struggles against Dive compositions, whose mobility allows them to evade Poke's damage and close the distance quickly. This composition relies on a high degree of mechanical skill from damage players and viligant awareness on the part of support and tank players.`;
                 break;
         }
     }
@@ -449,8 +449,8 @@ function getChartOptions(type, metric) {
 }
 
 function updateDoughnutCharts(teamNumber, results) {
-    const metrics = ['brawl', 'dive', 'pick', 'utility'];
-    const maxValues = { brawl: 500, dive: 500, pick: 500, utility: 20 };
+    const metrics = ['brawl', 'dive', 'poke', 'utility'];
+    const maxValues = { brawl: 500, dive: 500, poke: 500, utility: 20 };
     metrics.forEach(metric => {
         const chartId = `${teamNumber}-${metric}`;
         const metricValue = results.compositionFit[metric] ?? results.utilityScore;
@@ -533,7 +533,7 @@ document.getElementById('how-to-use-btn').onclick = function() {
     document.getElementById('how-to-use-overlay').style.display = 'block';
     appendCharacterImagesForPlaystyle('brawl');
     appendCharacterImagesForPlaystyle('dive');
-    appendCharacterImagesForPlaystyle('pick');
+    appendCharacterImagesForPlaystyle('poke');
 }
 
 function closeHowToUseOverlay() {

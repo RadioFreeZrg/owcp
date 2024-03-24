@@ -14,7 +14,7 @@
         "composition fit": {
             "brawl": 66,
             "dive": 40,
-            "pick": 100
+            "poke": 100
         },
         "utility": {
             "buff": "ultimate",
@@ -112,7 +112,7 @@
         "composition fit": {
             "brawl": 0,
             "dive": 20,
-            "pick": 100
+            "poke": 100
         },
         "utility": {
             "buff": 0,
@@ -205,7 +205,7 @@
         "composition fit": {
             "brawl": 66,
             "dive": 10,
-            "pick": 100
+            "poke": 100
         },
         "utility": {
             "buff": "ultimate",
@@ -315,7 +315,7 @@
         "composition fit": {
             "brawl": 40,
             "dive": 0,
-            "pick": 100
+            "poke": 100
         },
         "utility": {
             "buff": 0,
@@ -420,7 +420,7 @@
         "composition fit": {
             "brawl": 100,
             "dive": 30,
-            "pick": 40
+            "poke": 40
         },
         "utility": {
             "buff": "ultimate",
@@ -549,7 +549,7 @@
         "composition fit": {
             "brawl": 70,
             "dive": 20,
-            "pick": 50
+            "poke": 50
         },
         "utility": {
             "buff": 0,
@@ -642,7 +642,7 @@
         "composition fit": {
             "brawl": 70,
             "dive": 100,
-            "pick": 20
+            "poke": 20
         },
         "utility": {
             "buff": 0,
@@ -783,7 +783,7 @@
         "composition fit": {
             "brawl": 50,
             "dive": 100,
-            "pick": 20
+            "poke": 20
         },
         "utility": {
             "buff": 0,
@@ -887,7 +887,7 @@
         "composition fit": {
             "brawl": 40,
             "dive": 80,
-            "pick": 100
+            "poke": 100
         },
         "utility": {
             "buff": 0,
@@ -1003,7 +1003,7 @@
         "composition fit": {
             "brawl": 30,
             "dive": 100,
-            "pick": 20
+            "poke": 20
         },
         "utility": {
             "buff": 0,
@@ -1112,7 +1112,7 @@
         "composition fit": {
             "brawl": 20,
             "dive": 0,
-            "pick": 100
+            "poke": 100
         },
         "utility": {
             "buff": 0,
@@ -1228,7 +1228,7 @@
         "composition fit": {
             "brawl": 100,
             "dive": 30,
-            "pick": 20
+            "poke": 20
         },
         "utility": {
             "buff": 0,
@@ -1325,7 +1325,7 @@
         "composition fit": {
             "brawl": 100,
             "dive": 50,
-            "pick": 0
+            "poke": 0
         },
         "utility": {
             "buff": "cooldown",
@@ -1446,7 +1446,7 @@
         "composition fit": {
             "brawl": 70,
             "dive": 40,
-            "pick": 80
+            "poke": 80
         },
         "utility": {
             "buff": 0,
@@ -1550,7 +1550,7 @@
         "composition fit": {
             "brawl": 50,
             "dive": 60,
-            "pick": 100
+            "poke": 100
         },
         "utility": {
             "buff": "ultimate",
@@ -1659,7 +1659,7 @@
         "composition fit": {
             "brawl": 100,
             "dive": 30,
-            "pick": 0
+            "poke": 0
         },
         "utility": {
             "buff": "cooldown",
@@ -1790,7 +1790,7 @@
         "composition fit": {
             "brawl": 80,
             "dive": 100,
-            "pick": 0
+            "poke": 0
         },
         "utility": {
             "buff": "cooldown, ultimate",
@@ -1908,7 +1908,7 @@
         "composition fit": {
             "brawl": 100,
             "dive": 20,
-            "pick": 0
+            "poke": 0
         },
         "utility": {
             "buff": "cooldown",
@@ -2010,7 +2010,7 @@
         "composition fit": {
             "brawl": 100,
             "dive": 0,
-            "pick": 70
+            "poke": 70
         },
         "utility": {
             "buff": 0,
@@ -2102,7 +2102,7 @@
         "composition fit": {
             "brawl": 40,
             "dive": 60,
-            "pick": 100
+            "poke": 100
         },
         "utility": {
             "buff": "primary fire, ultimate",
@@ -2218,7 +2218,7 @@
         "composition fit": {
             "brawl": 100,
             "dive": 50,
-            "pick": 10
+            "poke": 10
         },
         "utility": {
             "buff": 0,
@@ -2315,7 +2315,7 @@
         "composition fit": {
             "brawl": 100,
             "dive": 0,
-            "pick": 30
+            "poke": 30
         },
         "utility": {
             "buff": "ultimate",
@@ -2419,7 +2419,7 @@
         "composition fit": {
             "brawl": 40,
             "dive": 60,
-            "pick": 60
+            "poke": 60
         },
         "utility": {
             "buff": 0,
@@ -2540,7 +2540,7 @@
         "composition fit": {
             "brawl": 100,
             "dive": 0,
-            "pick": 40
+            "poke": 40
         },
         "utility": {
             "buff": 0,
@@ -2644,7 +2644,7 @@
         "composition fit": {
             "brawl": 100,
             "dive": 40,
-            "pick": 0
+            "poke": 0
         },
         "utility": {
             "buff": 0,
@@ -2748,7 +2748,7 @@
         "composition fit": {
             "brawl": 100,
             "dive": 15,
-            "pick": 60
+            "poke": 60
         },
         "utility": {
             "buff": 0,
@@ -2857,7 +2857,7 @@
         "composition fit": {
             "brawl": 50,
             "dive": 0,
-            "pick": 60
+            "poke": 60
         },
         "utility": {
             "buff": 0,
@@ -2966,7 +2966,7 @@
         "composition fit": {
             "brawl": 50,
             "dive": 10,
-            "pick": 80
+            "poke": 80
         },
         "utility": {
             "buff": 0,
@@ -3070,7 +3070,7 @@
         "composition fit": {
             "brawl": 30,
             "dive": 70,
-            "pick": 80
+            "poke": 80
         },
         "utility": {
             "buff": 0,
@@ -3167,7 +3167,7 @@
         "composition fit": {
             "brawl": 40,
             "dive": 60,
-            "pick": 70
+            "poke": 70
         },
         "utility": {
             "buff": "cooldown",
@@ -3271,7 +3271,7 @@
         "composition fit": {
             "brawl": 40,
             "dive": 100,
-            "pick": 50
+            "poke": 50
         },
         "utility": {
             "buff": 0,
@@ -3387,7 +3387,7 @@
         "composition fit": {
             "brawl": 100,
             "dive": 30,
-            "pick": 30
+            "poke": 30
         },
         "utility": {
             "buff": "cooldown",
@@ -3479,7 +3479,7 @@
         "composition fit": {
             "brawl": 60,
             "dive": 0,
-            "pick": 60
+            "poke": 60
         },
         "utility": {
             "buff": 0,
@@ -3583,7 +3583,7 @@
         "composition fit": {
             "brawl": 30,
             "dive": 100,
-            "pick": 10
+            "poke": 10
         },
         "utility": {
             "buff": 0,
@@ -3685,7 +3685,7 @@
         "composition fit": {
             "brawl": 0,
             "dive": 30,
-            "pick": 100
+            "poke": 100
         },
         "utility": {
             "buff": 0,
@@ -3782,7 +3782,7 @@
         "composition fit": {
             "brawl": 10,
             "dive": 100,
-            "pick": 20
+            "poke": 20
         },
         "utility": {
             "buff": 0,
@@ -3879,7 +3879,7 @@
         "composition fit": {
             "brawl": 0,
             "dive": 100,
-            "pick": 30
+            "poke": 30
         },
         "utility": {
             "buff": "cooldown",
@@ -4000,7 +4000,7 @@
         "composition fit": {
             "brawl": 100,
             "dive": 20,
-            "pick": 40
+            "poke": 40
         },
         "utility": {
             "buff": "cooldown",
@@ -4109,7 +4109,7 @@
         "composition fit": {
             "brawl": 20,
             "dive": 50,
-            "pick": 100
+            "poke": 100
         },
         "utility": {
             "buff": "cooldown",
